@@ -6,6 +6,8 @@
   --border: 3px solid var(--ink);
   --shadow: 6px 6px 0 var(--ink);
   --radius: 18px;
+  --font-sans: "Archivo";
+  --font-hand: "Caveat";
 }
 
 *,

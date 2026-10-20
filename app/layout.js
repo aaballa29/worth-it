@@ -1,17 +1,4 @@
-import { Archivo, Caveat } from "next/font/google";
 import "./globals.css";
-
-const archivo = Archivo({
-  subsets: ["latin"],
-  weight: ["400", "600", "800", "900"],
-  variable: "--font-sans",
-});
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-hand",
-});
 
 export const metadata = {
   title: "worth it? — find your next flip in 5 seconds",
@@ -26,7 +13,15 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${caveat.variable}`}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Caveat:wght@600;700&display=swap"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
