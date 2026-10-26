@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { hashPassword, verifyPassword, fakeVerify } from "@/lib/password";
 import { createSession, destroySession } from "@/lib/session";
 
+const SERVER_ERROR = "Something went wrong on our end. Please try again in a minute.";
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function readForm(formData) {
@@ -27,19 +29,26 @@ export async function signUp(_prev, formData) {
     return { error: "Password must be 200 characters or fewer.", email };
   }
 
-  const sql = await db();
-  const passwordHash = await hashPassword(password);
-  const rows = await sql`
-    INSERT INTO users (email, password_hash)
-    VALUES (${email}, ${passwordHash})
-    ON CONFLICT (email) DO NOTHING
-    RETURNING id`;
+  try {
+    const sql = await db();
+    const passwordHash = await hashPassword(password);
+    const rows = await sql`
+      INSERT INTO users (email, password_hash)
+      VALUES (${email}, ${passwordHash})
+      ON CONFLICT (email) DO NOTHING
+      RETURNING id`;
 
-  if (rows.length === 0) {
-    return { error: "An account with that email already exists. Try logging in.", email };
+    if (rows.length === 0) {
+      return { error: "An account with that email already exists. Try logging in.", email };
+    }
+
+    await createSession(rows[0].id);
+  } catch (err) {
+    console.error("[auth] sign up failed:", err);
+    return { error: SERVER_ERROR, email };
   }
 
-  await createSession(rows[0].id);
+  // redirect() works by throwing, so it must stay outside the try/catch.
   redirect("/dashboard");
 }
 
@@ -49,14 +58,20 @@ export async function logIn(_prev, formData) {
 
   if (!email || !password || password.length > 200) return invalid;
 
-  const sql = await db();
-  const rows = await sql`SELECT id, password_hash FROM users WHERE email = ${email}`;
-  const user = rows[0];
+  try {
+    const sql = await db();
+    const rows = await sql`SELECT id, password_hash FROM users WHERE email = ${email}`;
+    const user = rows[0];
 
-  const ok = user ? await verifyPassword(password, user.password_hash) : await fakeVerify(password);
-  if (!ok) return invalid;
+    const ok = user ? await verifyPassword(password, user.password_hash) : await fakeVerify(password);
+    if (!ok) return invalid;
 
-  await createSession(user.id);
+    await createSession(user.id);
+  } catch (err) {
+    console.error("[auth] log in failed:", err);
+    return { error: SERVER_ERROR, email };
+  }
+
   redirect("/dashboard");
 }
 
