@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { logOut } from "../actions/auth";
+import ScanForm from "../components/ScanForm";
 
 export const metadata = { title: "Dashboard — worth it?" };
 
@@ -38,8 +39,8 @@ export default async function DashboardPage() {
         <div className="dash-grid">
           <section className="dash-card dash-scan">
             <h2>Scan an item</h2>
-            <p>Snap a photo of something on the rack to get a Worth It or Pass verdict.</p>
-            <span className="sticker dash-soon tilt-r">Coming<br />soon</span>
+            <p>Snap a photo of something on the rack to get a Worth It or Skip It verdict.</p>
+            <ScanForm />
           </section>
 
           <section className="dash-card">

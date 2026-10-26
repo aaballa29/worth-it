@@ -1326,6 +1326,7 @@ button.btn:disabled {
 
 .dash-card {
   position: relative;
+  min-width: 0;
   border: var(--border);
   border-radius: var(--radius);
   padding: 30px 28px;
@@ -1345,15 +1346,176 @@ button.btn:disabled {
   padding: 44px 28px;
 }
 
-.dash-soon {
-  position: absolute;
-  top: -26px;
-  right: 24px;
-  width: 104px;
-  height: 104px;
-  font-size: 17px;
-  text-transform: uppercase;
+/* scanner */
+
+.scan-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+  align-items: start;
+}
+
+.scan-drop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border: 3px dashed var(--ink);
+  border-radius: var(--radius);
   background: var(--white);
+  cursor: pointer;
+  overflow: hidden;
+  text-align: center;
+  padding: 16px;
+}
+
+.scan-drop.has-photo {
+  border-style: solid;
+  padding: 0;
+}
+
+.scan-drop:hover,
+.scan-drop:focus-within {
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.scan-drop input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.scan-drop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan-drop-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 15px;
+}
+
+.scan-drop-text strong {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.scan-label {
+  display: block;
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.scan-label span {
+  font-weight: 600;
+}
+
+.scan-price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: var(--border);
+  border-radius: 12px;
+  background: var(--white);
+  padding: 0 14px;
+  font-weight: 900;
+  font-size: 22px;
+}
+
+.scan-price:focus-within {
+  background: var(--white);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.scan-price input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  color: var(--ink);
+  padding: 12px 0;
+}
+
+.scan-submit {
+  width: 100%;
+  margin-top: 18px;
+  font-size: 19px;
+}
+
+button.btn:disabled:not(:active) {
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.result-card {
+  margin-top: 36px;
+  max-width: none;
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.result-media {
+  padding: 0;
+  overflow: hidden;
+  min-height: 260px;
+}
+
+.result-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 23px 0 0 23px;
+}
+
+.result-card .verdict {
+  top: 18px;
+  right: auto;
+  left: 18px;
+  transform: rotate(-6deg);
+  animation: stamp-l 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+.verdict-skip {
+  background: var(--white);
+}
+
+@keyframes stamp-l {
+  from {
+    transform: rotate(-20deg) scale(1.6);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(-6deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.prices-2 {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.result-card .prices {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.result-reason {
+  margin-top: 22px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.result-fine {
+  margin-top: 14px;
+  font-family: var(--font-hand), cursive;
+  font-size: 21px;
+  font-weight: 700;
 }
 
 .dash-note {
@@ -1640,11 +1802,28 @@ button.btn:disabled {
   }
 
   .dash-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scan-form {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .dash-scan {
-    padding-top: 64px;
+    padding: 28px 18px;
+  }
+
+  .result-card .verdict {
+    font-size: 26px;
+  }
+
+  .result-media img {
+    border-radius: 23px 23px 0 0;
+  }
+
+  .result-media {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
   }
 
   .roi {
