@@ -1,14 +1,11 @@
-import Link from "next/link";
-import AuthPlaceholder from "../components/AuthPlaceholder";
+import { redirect } from "next/navigation";
+import AuthForm from "../components/AuthForm";
+import { logIn } from "../actions/auth";
+import { getCurrentUser } from "@/lib/session";
 
 export const metadata = { title: "Log in — worth it?" };
 
-export default function LogIn() {
-  return (
-    <AuthPlaceholder
-      title="Log in is coming soon."
-      message="Accounts aren't open just yet. We'll be ready for you shortly."
-      alt={<>New here? <Link href="/signup">Sign up</Link></>}
-    />
-  );
+export default async function LogInPage() {
+  if (await getCurrentUser()) redirect("/dashboard");
+  return <AuthForm mode="login" action={logIn} />;
 }
