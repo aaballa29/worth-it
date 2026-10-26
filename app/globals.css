@@ -1346,6 +1346,66 @@ button.btn:disabled {
   padding: 44px 28px;
 }
 
+/* billing */
+
+.dash-banner {
+  margin: -20px 0 28px;
+  background: var(--mint);
+  border: var(--border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-weight: 700;
+}
+
+.dash-banner a {
+  font-weight: 900;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.dash-manage {
+  margin-top: 18px;
+}
+
+.dash-manage .btn-sm {
+  font-size: 15px;
+  padding: 9px 20px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.upgrade {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 6px;
+}
+
+.upgrade p {
+  max-width: 52ch;
+}
+
+.upgrade form {
+  margin-top: 24px;
+}
+
+.upgrade-btn {
+  background: var(--white);
+}
+
+.upgrade-fine {
+  margin-top: 14px;
+  font-family: var(--font-hand), cursive;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.upgrade-tag {
+  flex: none;
+  font-size: 34px;
+  background: var(--white);
+}
+
 /* scanner */
 
 .scan-form {
@@ -1807,6 +1867,16 @@ button.btn:disabled:not(:active) {
 
   .scan-form {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .upgrade {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  .upgrade-btn {
+    width: 100%;
+    white-space: normal;
   }
 
   .dash-scan {

@@ -126,8 +126,8 @@ const FAQS = [
     a: "Verdicts and profit estimates work whether you sell on Depop, Poshmark, or eBay. Ready-to-post listings are written for Depop.",
   },
   {
-    q: "Do I need a credit card to try it?",
-    a: "No. The free plan gives you 5 scans a day with no card required. Upgrade to Pro whenever you want unlimited scans.",
+    q: "Do I need a credit card to sign up?",
+    a: "No. Creating an account is free. Scanning is part of Pro ($6/month), which you can start from your dashboard whenever you're ready.",
   },
   {
     q: "Can I cancel Pro anytime?",
@@ -139,7 +139,7 @@ export default function Home() {
   return (
     <>
       <div className="announce">
-        Free to try — find your first flip today
+        Sign up free — find your next flip in 5 seconds
       </div>
 
       <header className="nav wrap">
@@ -412,9 +412,9 @@ export default function Home() {
               </div>
               <h3>Free</h3>
               <ul className="plan-list">
-                <li><span className="check">✓</span> 5 scans a day</li>
-                <li><span className="check">✓</span> Worth It / Pass verdicts</li>
-                <li><span className="check">✓</span> Profit after fees &amp; shipping</li>
+                <li><span className="check">✓</span> Create your account</li>
+                <li><span className="check">✓</span> Explore your dashboard</li>
+                <li><span className="check">✓</span> Upgrade whenever you&rsquo;re ready</li>
               </ul>
               <Link href={SIGNUP_URL} className="btn btn-ghost">Sign up free</Link>
             </div>
@@ -427,8 +427,8 @@ export default function Home() {
               <h3>Pro</h3>
               <ul className="plan-list">
                 <li><span className="check">✓</span> Unlimited scans</li>
-                <li><span className="check">✓</span> Ready-to-post Depop listings</li>
-                <li><span className="check">✓</span> Everything in Free</li>
+                <li><span className="check">✓</span> Worth It / Skip It verdicts</li>
+                <li><span className="check">✓</span> Resale price estimates</li>
               </ul>
               <Link href={`${SIGNUP_URL}?plan=pro`} className="btn btn-primary">Get Pro</Link>
             </div>

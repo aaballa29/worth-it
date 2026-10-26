@@ -10,6 +10,7 @@ const MAX_BYTES = 3.75 * 1024 * 1024; // Claude's per-image limit is 5 MB of bas
 export async function appraise(_prev, formData) {
   const user = await getCurrentUser();
   if (!user) return { error: "Your session expired. Please log in again." };
+  if (!user.paid) return { error: "Scanning is a Pro feature. Upgrade to start scanning." };
 
   const photo = formData.get("photo");
   if (!photo || typeof photo === "string" || photo.size === 0) {

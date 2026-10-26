@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
   email         TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
   paid          BOOLEAN NOT NULL DEFAULT FALSE,
+  stripe_customer_id TEXT,              -- set by the Stripe webhook after checkout
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
