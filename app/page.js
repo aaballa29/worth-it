@@ -1,5 +1,11 @@
+import Link from "next/link";
+
 // Your name for the footer.
 const BUILDER_NAME = "Annalise Aballa";
+
+// Where the Sign up / Log in buttons go. Point these at your real auth pages when they exist.
+const SIGNUP_URL = "/signup";
+const LOGIN_URL = "/login";
 
 const SCRIBBLE =
   "M8 210 C 110 130, 170 270, 262 180 C 330 112, 300 48, 252 92 C 206 136, 320 250, 424 186 C 520 128, 556 236, 646 178 C 716 132, 700 70, 660 98 C 620 126, 690 240, 790 190 C 850 160, 880 130, 920 60";
@@ -92,6 +98,43 @@ function Jacket() {
 
 /* ---------- page ---------- */
 
+const PLATFORMS = [
+  {
+    name: "Depop",
+    tag: "Vintage, Y2K & streetwear",
+    text: "Know which pieces will actually move with Gen Z buyers, then post with a listing written for Depop.",
+  },
+  {
+    name: "Poshmark",
+    tag: "Brands & closet staples",
+    text: "Spot the mall-brand finds worth listing and skip the ones that sit in your closet for months.",
+  },
+  {
+    name: "eBay",
+    tag: "Everything else",
+    text: "Get a fast read on resale value for the odd stuff, so you don't spend 10 minutes scrolling sold comps in the aisle.",
+  },
+];
+
+const FAQS = [
+  {
+    q: "How does Worth It? know what something will sell for?",
+    a: "It identifies the item from your photo (brand, era, style) and estimates its resale price, then subtracts what you paid plus fees and shipping to show your real profit. It's an estimate, not a guarantee, but it's a lot better than guessing.",
+  },
+  {
+    q: "Which platforms does it work for?",
+    a: "Verdicts and profit estimates work whether you sell on Depop, Poshmark, or eBay. Ready-to-post listings are written for Depop.",
+  },
+  {
+    q: "Do I need a credit card to try it?",
+    a: "No. The free plan gives you 5 scans a day with no card required. Upgrade to Pro whenever you want unlimited scans.",
+  },
+  {
+    q: "Can I cancel Pro anytime?",
+    a: "Yes. Cancel whenever you like and you'll keep Pro until the end of the month you paid for.",
+  },
+];
+
 export default function Home() {
   return (
     <>
@@ -100,13 +143,15 @@ export default function Home() {
       </div>
 
       <header className="nav wrap">
-        <a href="#" className="nav-logo" aria-label="worth it? home">
+        <Link href="/" className="nav-logo" aria-label="worth it? home">
           worth it<span>?</span>
-        </a>
+        </Link>
         <nav aria-label="Main">
-          <a href="#how">How it works</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#login" className="nav-login">Log in</a>
+          <a href="#how" className="nav-hide-sm">How it works</a>
+          <a href="#who" className="nav-hide-sm">Who it&rsquo;s for</a>
+          <a href="#pricing" className="nav-hide-sm">Pricing</a>
+          <Link href={LOGIN_URL} className="nav-login">Log in</Link>
+          <Link href={SIGNUP_URL} className="btn btn-primary btn-sm">Sign up</Link>
         </nav>
       </header>
 
@@ -125,25 +170,31 @@ export default function Home() {
           <div className="hero-body">
             <div className="hero-copy">
               <h1>
-                Is it worth it?{" "}
+                Know what it&rsquo;s worth{" "}
                 <span className="hl">
-                  Find out in 5 seconds.
+                  before you buy it.
                   <Underline className="hl-underline" />
                 </span>
               </h1>
               <p className="lede">
-                Standing in the thrift aisle wondering if that jacket will flip?
-                Snap a photo and our AI tells you what it&rsquo;ll resell for, what
-                you&rsquo;ll actually profit, and writes the listing for you.
+                Snap a photo of anything on the rack. Our AI tells you what it&rsquo;ll resell for, your
+                real profit after fees and shipping, and a clear <strong>Worth It</strong> or{" "}
+                <strong>Pass</strong> in about 5 seconds.
               </p>
               <div className="cta-row">
-                <a href="#try" className="btn btn-primary">Try it free</a>
+                <Link href={SIGNUP_URL} className="btn btn-primary">Sign up free</Link>
                 <a href="#how" className="btn btn-ghost">See how it works</a>
                 <div className="cta-note" aria-hidden="true">
                   <CurlyArrow className="cta-arrow" />
                   <span>no card needed!</span>
                 </div>
               </div>
+              <p className="for-line">
+                Made for resellers on
+                <span className="chip">Depop</span>
+                <span className="chip">Poshmark</span>
+                <span className="chip">eBay</span>
+              </p>
             </div>
 
             <div className="hero-stickers" aria-hidden="true">
@@ -159,7 +210,7 @@ export default function Home() {
         </section>
 
         {/* TICKER */}
-        <div className="ticker" aria-label="Recent flips">
+        <div className="ticker" aria-label="Example flips">
           <div className="ticker-track">
             {[...FLIPS, ...FLIPS].map((f, i) => (
               <span key={i} className="ticker-item" aria-hidden={i >= FLIPS.length}>
@@ -182,7 +233,7 @@ export default function Home() {
               <li className="step">
                 <span className="step-num">1</span>
                 <h3>Snap a photo</h3>
-                <p>Point your camera at the tag, the item, or both. Right there in the aisle.</p>
+                <p>Point your camera at the item, the tag, or both. Right there in the aisle.</p>
               </li>
               <li className="step-arrow" aria-hidden="true"><Arrow /></li>
               <li className="step">
@@ -190,23 +241,23 @@ export default function Home() {
                 <h3>Get your verdict</h3>
                 <p>
                   A clear <strong>&ldquo;Worth It&rdquo;</strong> or <strong>&ldquo;Pass&rdquo;</strong>{" "}
-                  with an estimated resale price and profit.
+                  with the estimated resale price and your profit after fees and shipping.
                 </p>
               </li>
               <li className="step-arrow" aria-hidden="true"><Arrow /></li>
               <li className="step">
                 <span className="step-num">3</span>
                 <h3>Post it</h3>
-                <p>Get a ready-to-post Depop listing: title, description, tags, and price.</p>
+                <p>Bought it? Get a ready-to-post Depop listing with title, description, and hashtags.</p>
               </li>
             </ol>
           </div>
         </section>
 
         {/* EXAMPLE CARD */}
-        <section id="try" className="example wrap">
+        <section id="example" className="example wrap">
           <div className="section-head">
-            <span className="badge">Real example</span>
+            <span className="badge">Example scan</span>
             <h2>Here&rsquo;s what you get.</h2>
           </div>
 
@@ -217,7 +268,7 @@ export default function Home() {
             </div>
 
             <div className="card-body">
-              <p className="card-kicker">Scanned 2 seconds ago</p>
+              <p className="card-kicker">Scanned in 4 seconds</p>
               <h3>Vintage 90s canvas chore jacket</h3>
 
               <dl className="prices">
@@ -257,21 +308,81 @@ export default function Home() {
           </article>
         </section>
 
-        {/* ABOUT / PRODUCT DESCRIPTION */}
+        {/* WHO IT'S FOR */}
+        <section id="who" className="who">
+          <div className="wrap">
+            <div className="section-head">
+              <span className="badge">Who it&rsquo;s for</span>
+              <h2>Built for people who flip.</h2>
+              <p className="section-sub">
+                Side hustle or full-time closet, if you buy secondhand to resell, Worth It? is for you.
+              </p>
+            </div>
+
+            <div className="who-grid">
+              {PLATFORMS.map((p, i) => (
+                <article key={p.name} className={`who-card who-card-${i}`}>
+                  <span className="who-name">{p.name}</span>
+                  <h3>{p.tag}</h3>
+                  <p>{p.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* WHY IT'S WORTH PAYING FOR */}
+        <section id="why" className="why wrap">
+          <div className="section-head">
+            <span className="badge">Why pay for it</span>
+            <h2>It pays for itself with one flip.</h2>
+          </div>
+
+          <div className="compare">
+            <div className="compare-col">
+              <h3>Without Worth It?</h3>
+              <ul>
+                <li><span className="x">✕</span> Scrolling sold listings for 10 minutes per item</li>
+                <li><span className="x">✕</span> Guessing, then finding out fees ate your profit</li>
+                <li><span className="x">✕</span> Bins of stuff that never sells</li>
+                <li><span className="x">✕</span> Writing every listing by hand at midnight</li>
+              </ul>
+            </div>
+            <div className="compare-col compare-yes">
+              <h3>With Worth It?</h3>
+              <ul>
+                <li><span className="check">✓</span> A verdict in about 5 seconds</li>
+                <li><span className="check">✓</span> Profit shown after fees and shipping</li>
+                <li><span className="check">✓</span> Only buy what&rsquo;s worth flipping</li>
+                <li><span className="check">✓</span> Listings written for you, ready to post</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="roi">
+            <div className="pricetag roi-tag tilt-l">
+              <span className="pricetag-hole" />
+              +$62
+            </div>
+            <p>
+              The chore jacket above made <strong>$62 profit</strong>. That covers{" "}
+              <span className="roi-hl">10 months of Pro</span>. Skip just one bad buy a month and
+              you&rsquo;re already ahead.
+            </p>
+          </div>
+        </section>
+
+        {/* ABOUT */}
         <section id="about" className="about">
           <div className="wrap about-inner">
             <div className="about-copy">
-              <span className="badge">What is Worth It?</span>
-              <h2>Know what it&rsquo;s worth before you buy it.</h2>
+              <span className="badge">Our story</span>
+              <h2>Made by a reseller, for resellers.</h2>
               <p>
-                Worth It? is an AI tool for thrift resellers. Snap a photo of anything on the rack and
-                it identifies the brand, era, and style, estimates what it&rsquo;ll resell for, and gives
-                you a clear verdict, <strong>Worth It</strong> or <strong>Pass</strong>, based on your
-                real profit after fees and shipping.
-              </p>
-              <p>
-                When you buy, Worth It? writes a ready-to-post Depop listing with the title,
-                description, and hashtags, so you spend less time typing and more time flipping.
+                Worth It? identifies the brand, era, and style of anything you find, estimates what
+                it&rsquo;ll resell for, and gives you a clear verdict based on your real profit. When you
+                buy, it writes a ready-to-post Depop listing with the title, description, and hashtags,
+                so you spend less time typing and more time flipping.
               </p>
               <p className="about-note">
                 Built by {BUILDER_NAME}, a reseller who spent a summer doing all of this by hand.
@@ -300,8 +411,12 @@ export default function Home() {
                 $0
               </div>
               <h3>Free</h3>
-              <p>5 scans a day. Every verdict, every profit estimate.</p>
-              <a href="#try" className="btn btn-ghost">Start free</a>
+              <ul className="plan-list">
+                <li><span className="check">✓</span> 5 scans a day</li>
+                <li><span className="check">✓</span> Worth It / Pass verdicts</li>
+                <li><span className="check">✓</span> Profit after fees &amp; shipping</li>
+              </ul>
+              <Link href={SIGNUP_URL} className="btn btn-ghost">Sign up free</Link>
             </div>
             <div className="plan plan-pro">
               <div className="pricetag plan-tag tilt-r">
@@ -310,9 +425,29 @@ export default function Home() {
               </div>
               <span className="badge badge-sm plan-pop">Most popular</span>
               <h3>Pro</h3>
-              <p>Unlimited scans plus ready-to-post Depop listings for every find.</p>
-              <a href="#try" className="btn btn-primary">Go Pro</a>
+              <ul className="plan-list">
+                <li><span className="check">✓</span> Unlimited scans</li>
+                <li><span className="check">✓</span> Ready-to-post Depop listings</li>
+                <li><span className="check">✓</span> Everything in Free</li>
+              </ul>
+              <Link href={`${SIGNUP_URL}?plan=pro`} className="btn btn-primary">Get Pro</Link>
             </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="faq wrap">
+          <div className="section-head">
+            <span className="badge">FAQ</span>
+            <h2>Questions? Fair.</h2>
+          </div>
+          <div className="faq-list">
+            {FAQS.map((f) => (
+              <details key={f.q} className="faq-item">
+                <summary>{f.q}</summary>
+                <p>{f.a}</p>
+              </details>
+            ))}
           </div>
         </section>
 
@@ -321,13 +456,24 @@ export default function Home() {
           <h2>
             Your next flip is <span className="final-circle">on the rack<Circle /></span> right now.
           </h2>
-          <a href="#try" className="btn btn-primary btn-lg">Find out if it&rsquo;s worth it</a>
+          <Link href={SIGNUP_URL} className="btn btn-primary btn-lg">Sign up free</Link>
+          <p className="final-login">
+            Already have an account? <Link href={LOGIN_URL}>Log in</Link>
+          </p>
         </section>
       </main>
 
       <footer className="footer">
         <div className="wrap footer-inner">
           <span className="nav-logo">worth it<span>?</span></span>
+          <nav className="footer-links" aria-label="Footer">
+            <a href="#how">How it works</a>
+            <a href="#who">Who it&rsquo;s for</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <Link href={LOGIN_URL}>Log in</Link>
+            <Link href={SIGNUP_URL}>Sign up</Link>
+          </nav>
           <p>Built by {BUILDER_NAME}</p>
         </div>
       </footer>
