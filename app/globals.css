@@ -1422,6 +1422,91 @@ button.btn:disabled {
   box-shadow: 3px 3px 0 var(--ink);
 }
 
+/* drag, paste, QR */
+
+.scan {
+  position: relative;
+}
+
+.scan-drop kbd {
+  font: inherit;
+  font-weight: 800;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 0 5px;
+  background: var(--mint);
+}
+
+.scan.is-dragging .scan-drop {
+  border-style: solid;
+  background: var(--mint);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.scan-drop-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--mint);
+  font-size: 32px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.scan-replace {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  background: var(--ink);
+  color: var(--mint);
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 5px 12px;
+  pointer-events: none;
+}
+
+.phone-qr {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 901px) {
+  .phone-qr {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 28px;
+    padding: 16px 20px;
+    background: var(--white);
+    border: var(--border);
+    border-radius: var(--radius);
+    max-width: 560px;
+  }
+}
+
+.phone-qr-code {
+  flex: none;
+  width: 112px;
+  height: 112px;
+}
+
+.phone-qr-code svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.phone-qr p {
+  font-size: 15px;
+}
+
+.phone-qr-title {
+  font-weight: 900;
+  font-size: 19px !important;
+  margin-bottom: 4px;
+}
+
 /* pro page */
 
 .pro-card {

@@ -24,29 +24,98 @@ async function shrinkImage(file) {
   }
 }
 
+// First image in a list of Files (from a drop or a paste), or null.
+function firstImage(files) {
+  return Array.from(files ?? []).find((f) => f.type.startsWith("image/")) ?? null;
+}
+
 const money = (n) => `$${Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 
 export default function ScanForm({ initialAllowance }) {
   const [state, formAction, pending] = useActionState(appraise, {});
   const [hideLimit, setHideLimit] = useState(false);
   const allowance = state.allowance ?? initialAllowance;
+  const [photo, setPhotoFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [preparing, setPreparing] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [desktop, setDesktop] = useState(false);
+  const [pasteKey, setPasteKey] = useState("Ctrl+V");
   const fileRef = useRef(null);
+  const dragDepth = useRef(0);
   const busy = pending || preparing;
+  const busyRef = useRef(busy);
+  busyRef.current = busy;
 
   useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview]);
 
+  function setPhoto(file) {
+    if (!file || busyRef.current) return;
+    setPhotoFile(file);
+    setPreview(URL.createObjectURL(file));
+  }
+
+  // Desktop gets drop/paste hints; phones keep the simple "tap to add" box.
+  useEffect(() => {
+    setDesktop(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+    if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) setPasteKey("⌘V");
+  }, []);
+
+  // Paste an image from the clipboard anywhere on the page (Ctrl/Cmd+V).
+  useEffect(() => {
+    function onPaste(e) {
+      const file = firstImage(e.clipboardData?.files);
+      if (!file) return; // let normal text pastes (like the price) through
+      e.preventDefault();
+      setPhoto(file);
+    }
+    // Stop the browser from opening an image dropped outside the drop area.
+    function blockDrop(e) {
+      if (e.dataTransfer?.types?.includes("Files")) e.preventDefault();
+    }
+    document.addEventListener("paste", onPaste);
+    window.addEventListener("dragover", blockDrop);
+    window.addEventListener("drop", blockDrop);
+    return () => {
+      document.removeEventListener("paste", onPaste);
+      window.removeEventListener("dragover", blockDrop);
+      window.removeEventListener("drop", blockDrop);
+    };
+  }, []);
+
+  const dropHandlers = {
+    onDragEnter(e) {
+      if (!e.dataTransfer?.types?.includes("Files")) return;
+      e.preventDefault();
+      dragDepth.current += 1;
+      setDragging(true);
+    },
+    onDragOver(e) {
+      if (!e.dataTransfer?.types?.includes("Files")) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+    },
+    onDragLeave() {
+      dragDepth.current = Math.max(0, dragDepth.current - 1);
+      if (dragDepth.current === 0) setDragging(false);
+    },
+    onDrop(e) {
+      e.preventDefault();
+      dragDepth.current = 0;
+      setDragging(false);
+      setPhoto(firstImage(e.dataTransfer?.files));
+    },
+  };
+
   function onFileChange(e) {
-    const file = e.target.files?.[0];
-    setPreview(file ? URL.createObjectURL(file) : null);
+    setPhoto(e.target.files?.[0] ?? null);
   }
 
   async function onSubmit(e) {
     e.preventDefault();
     setHideLimit(false);
     const formData = new FormData(e.currentTarget);
-    const file = fileRef.current?.files?.[0];
+    const file = photo;
     if (file) {
       setPreparing(true);
       const small = await shrinkImage(file);
@@ -59,26 +128,37 @@ export default function ScanForm({ initialAllowance }) {
   const result = state.result;
 
   return (
-    <div className="scan">
+    <div className={`scan${dragging ? " is-dragging" : ""}`} {...dropHandlers}>
       <form className="scan-form" onSubmit={onSubmit}>
         <label className={`scan-drop${preview ? " has-photo" : ""}`}>
           <input
             ref={fileRef}
             type="file"
-            name="photo"
             accept="image/jpeg,image/png,image/webp,image/gif,image/heic"
             onChange={onFileChange}
             disabled={busy}
+            aria-label="Add a photo of the item"
           />
-          {preview ? (
+          {preview && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={preview} alt="Your item" />
-          ) : (
+          )}
+          {!preview && !desktop && (
             <span className="scan-drop-text">
               <strong>Tap to add a photo</strong>
               <span>Take one or pick from your camera roll</span>
             </span>
           )}
+          {!preview && desktop && (
+            <span className="scan-drop-text">
+              <strong>Drop a photo here</strong>
+              <span>
+                or paste one with <kbd>{pasteKey}</kbd>, or click to browse
+              </span>
+            </span>
+          )}
+          {preview && desktop && <span className="scan-replace">Drop, paste, or click to change</span>}
+          {dragging && <span className="scan-drop-overlay">Drop it!</span>}
         </label>
 
         <div className="scan-side">

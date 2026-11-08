@@ -4,6 +4,7 @@ import { FREE_DAILY_SCANS, getScanAllowance } from "@/lib/scans";
 import { getCurrentUser } from "@/lib/session";
 import { logOut } from "../actions/auth";
 import { openBillingPortal } from "../actions/billing";
+import PhoneQr from "../components/PhoneQr";
 import ScanForm from "../components/ScanForm";
 
 export const metadata = { title: "Dashboard — worth it?" };
@@ -66,6 +67,7 @@ export default async function DashboardPage({ searchParams }) {
             <h2>Scan an item</h2>
             <p>Snap a photo of something on the rack to see what it&rsquo;s really worth before you buy.</p>
             <ScanForm initialAllowance={allowance} />
+            <PhoneQr />
           </section>
 
           <section className="dash-card">
