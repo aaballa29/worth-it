@@ -29,6 +29,9 @@ function firstImage(files) {
   return Array.from(files ?? []).find((f) => f.type.startsWith("image/")) ?? null;
 }
 
+const VERDICT_LABEL = { buy_it: "BUY IT ✓", maybe: "MAYBE ?", skip_it: "SKIP IT ✕" };
+const CONFIDENCE_LABEL = { high: "High confidence", medium: "Medium confidence", low: "Low confidence" };
+
 const money = (n) => `$${Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 
 export default function ScanForm({ initialAllowance }) {
@@ -111,6 +114,11 @@ export default function ScanForm({ initialAllowance }) {
     setPhoto(e.target.files?.[0] ?? null);
   }
 
+  // The resized photo and price from the last scan, reused when re-checking with brand info.
+  const lastScan = useRef(null);
+  const [brandHint, setBrandHint] = useState("");
+  const [tagPhoto, setTagPhoto] = useState(null);
+
   async function onSubmit(e) {
     e.preventDefault();
     setHideLimit(false);
@@ -120,6 +128,25 @@ export default function ScanForm({ initialAllowance }) {
       setPreparing(true);
       const small = await shrinkImage(file);
       formData.set("photo", small, small === file ? file.name : "photo.jpg");
+      setPreparing(false);
+      lastScan.current = { photo: formData.get("photo"), paid: String(formData.get("paid") ?? "") };
+    }
+    setBrandHint("");
+    setTagPhoto(null);
+    startTransition(() => formAction(formData));
+  }
+
+  async function onRecheck() {
+    if (!lastScan.current || !state.result) return;
+    const formData = new FormData();
+    formData.set("photo", lastScan.current.photo);
+    formData.set("paid", lastScan.current.paid);
+    formData.set("brand", brandHint.trim());
+    formData.set("recheckOf", state.result.scanId);
+    if (tagPhoto) {
+      setPreparing(true);
+      const small = await shrinkImage(tagPhoto);
+      formData.set("tagPhoto", small, small === tagPhoto ? tagPhoto.name : "tag.jpg");
       setPreparing(false);
     }
     startTransition(() => formAction(formData));
@@ -208,14 +235,27 @@ export default function ScanForm({ initialAllowance }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={preview} alt="" />
             )}
-            <div className={`verdict${result.verdict === "skip_it" ? " verdict-skip" : ""}`}>
-              {result.verdict === "worth_it" ? "WORTH IT ✓" : "SKIP IT ✕"}
-            </div>
+            <div className={`verdict verdict-${result.verdict}`}>{VERDICT_LABEL[result.verdict]}</div>
           </div>
 
           <div className="card-body">
-            <p className="card-kicker">{result.brand ? result.brand : "Brand not visible"}</p>
+            <div className="result-meta">
+              <p className="card-kicker">
+                {result.brand
+                  ? `${result.brand}${result.brandStatus === "user_provided" ? " (from you)" : ""}`
+                  : "Brand not visible"}
+              </p>
+              <span className={`badge badge-sm confidence confidence-${result.confidence}`}>
+                {CONFIDENCE_LABEL[result.confidence]}
+              </span>
+            </div>
             <h3>{result.item}</h3>
+
+            <ul className="result-chips" aria-label="What we looked at">
+              {result.itemType && <li>{result.itemType}</li>}
+              {result.material && result.material !== "Unknown" && <li>{result.material}</li>}
+              {result.condition && <li>{result.condition}</li>}
+            </ul>
 
             <dl className={`prices${result.paid == null ? " prices-2" : ""}`}>
               {result.paid != null && (
@@ -227,14 +267,50 @@ export default function ScanForm({ initialAllowance }) {
               <div className="profit">
                 <dt>Est. resale</dt>
                 <dd>
-                  {result.resaleLow === result.resaleHigh
-                    ? money(result.resaleLow)
-                    : `${money(result.resaleLow)}–${money(result.resaleHigh)}`}
+                  {result.resaleHigh === 0
+                    ? "Unknown"
+                    : result.resaleLow === result.resaleHigh
+                      ? money(result.resaleLow)
+                      : `${money(result.resaleLow)}–${money(result.resaleHigh)}`}
                 </dd>
               </div>
             </dl>
 
             <p className="result-reason">{result.reason}</p>
+
+            {result.brandStatus === "unclear" && result.canRecheck && lastScan.current && (
+              <div className="brand-help">
+                <p className="brand-help-title">Can&rsquo;t see a brand. Know it? Add it for a sharper estimate.</p>
+                <div className="brand-help-row">
+                  <input
+                    type="text"
+                    value={brandHint}
+                    onChange={(e) => setBrandHint(e.target.value)}
+                    placeholder="Type the brand"
+                    maxLength={80}
+                    aria-label="Brand name"
+                  />
+                  <label className="btn btn-ghost btn-sm brand-tag-btn">
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif,image/heic"
+                      onChange={(e) => setTagPhoto(e.target.files?.[0] ?? null)}
+                    />
+                    {tagPhoto ? "Tag photo added ✓" : "Add a tag photo"}
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm brand-recheck"
+                  onClick={onRecheck}
+                  disabled={!brandHint.trim() && !tagPhoto}
+                >
+                  Re-check with this info
+                </button>
+                <p className="brand-help-fine">Doesn&rsquo;t use another free scan.</p>
+              </div>
+            )}
+
             <p className="result-fine">Estimates only. Check sold listings before big buys.</p>
           </div>
         </article>

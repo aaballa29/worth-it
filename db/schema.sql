@@ -24,6 +24,7 @@ CREATE INDEX IF NOT EXISTS sessions_user_id_idx ON sessions (user_id);
 CREATE TABLE IF NOT EXISTS scans (
   id         BIGSERIAL PRIMARY KEY,
   user_id    BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  rechecked  BOOLEAN NOT NULL DEFAULT FALSE,  -- one free re-run with brand/tag info
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
