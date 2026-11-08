@@ -139,7 +139,7 @@ export default function Home() {
   return (
     <>
       <div className="announce">
-        Sign up free — find your next flip in 5 seconds
+        Sign up free — stop overpaying at the thrift store
       </div>
 
       <header className="nav wrap">
@@ -170,16 +170,16 @@ export default function Home() {
           <div className="hero-body">
             <div className="hero-copy">
               <h1>
-                Know what it&rsquo;s worth{" "}
+                Know what it&rsquo;s really worth{" "}
                 <span className="hl">
-                  before you buy it.
+                  before you spend a dollar.
                   <Underline className="hl-underline" />
                 </span>
               </h1>
               <p className="lede">
-                Snap a photo of anything on the rack. Our AI tells you what it&rsquo;ll resell for, your
-                real profit after fees and shipping, and a clear <strong>Worth It</strong> or{" "}
-                <strong>Pass</strong> in about 5 seconds.
+                Stop wasting money on thrift finds that won&rsquo;t sell. Snap a photo on the rack and see
+                what it actually resells for, plus a <strong>Buy it</strong>, <strong>Maybe</strong>, or{" "}
+                <strong>Skip it</strong> verdict, in seconds.
               </p>
               <div className="cta-row">
                 <Link href={SIGNUP_URL} className="btn btn-primary">Sign up free</Link>
@@ -198,7 +198,7 @@ export default function Home() {
             </div>
 
             <div className="hero-stickers" aria-hidden="true">
-              <div className="sticker sticker-lg tilt-l">5 sec<br />verdicts</div>
+              <div className="sticker sticker-lg tilt-l">No more<br />bad buys</div>
               <div className="pricetag tilt-r">
                 <span className="pricetag-hole" />
                 $8 → $64
@@ -240,8 +240,9 @@ export default function Home() {
                 <span className="step-num">2</span>
                 <h3>Get your verdict</h3>
                 <p>
-                  A clear <strong>&ldquo;Worth It&rdquo;</strong> or <strong>&ldquo;Pass&rdquo;</strong>{" "}
-                  with the estimated resale price and your profit after fees and shipping.
+                  A clear <strong>&ldquo;Buy it&rdquo;</strong>, <strong>&ldquo;Maybe&rdquo;</strong>, or{" "}
+                  <strong>&ldquo;Skip it&rdquo;</strong>{" "}
+                  with the estimated resale price, the reason, and how confident it is.
                 </p>
               </li>
               <li className="step-arrow" aria-hidden="true"><Arrow /></li>
@@ -351,7 +352,7 @@ export default function Home() {
             <div className="compare-col compare-yes">
               <h3>With Worth It?</h3>
               <ul>
-                <li><span className="check">✓</span> A verdict in about 5 seconds</li>
+                <li><span className="check">✓</span> A clear verdict in seconds</li>
                 <li><span className="check">✓</span> Profit shown after fees and shipping</li>
                 <li><span className="check">✓</span> Only buy what&rsquo;s worth flipping</li>
                 <li><span className="check">✓</span> Listings written for you, ready to post</li>
@@ -391,7 +392,7 @@ export default function Home() {
             <ul className="features">
               <li><span className="check">✓</span> Identifies brand, era &amp; style</li>
               <li><span className="check">✓</span> Estimates the resale price</li>
-              <li><span className="check">✓</span> Worth It or Pass, after fees &amp; shipping</li>
+              <li><span className="check">✓</span> Buy it, Maybe, or Skip it verdicts</li>
               <li><span className="check">✓</span> Ready-to-post Depop listings</li>
             </ul>
           </div>

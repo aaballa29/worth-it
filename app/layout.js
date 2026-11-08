@@ -1,9 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "worth it? — find your next flip in 5 seconds",
+  title: "worth it? — know what it's worth before you buy",
   description:
-    "Worth It? is an AI tool for thrift resellers. Snap a photo, get a Worth It or Pass verdict with a profit estimate, and a ready-to-post Depop listing.",
+    "Stop wasting money on thrift finds that won't sell. Snap a photo and Worth It? shows what it really resells for, with a Buy it, Maybe, or Skip it verdict.",
   icons: { icon: "/favicon.svg" },
 };
 
