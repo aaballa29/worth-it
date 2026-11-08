@@ -1373,37 +1373,87 @@ button.btn:disabled {
   box-shadow: 3px 3px 0 var(--ink);
 }
 
-.upgrade {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  margin-top: 6px;
+.nav nav a.nav-pro {
+  font-weight: 800;
+  background: var(--mint);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 6px 14px;
 }
 
-.upgrade p {
-  max-width: 52ch;
+.dash-manage-link {
+  margin-top: 16px;
+  font-size: 15px;
+  padding: 9px 20px;
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
-.upgrade form {
-  margin-top: 24px;
-}
-
-.upgrade-btn {
-  background: var(--white);
-}
-
-.upgrade-fine {
+.scan-allowance {
   margin-top: 14px;
-  font-family: var(--font-hand), cursive;
-  font-size: 22px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.scan-allowance a {
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.scan-limit {
+  margin-top: 16px;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 14px;
+  padding: 16px;
   font-weight: 700;
 }
 
-.upgrade-tag {
-  flex: none;
-  font-size: 34px;
-  background: var(--white);
+.scan-limit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.scan-limit-actions .btn-sm {
+  font-size: 15px;
+  padding: 9px 18px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* pro page */
+
+.pro-card {
+  position: relative;
+  text-align: left;
+}
+
+.pro-card .badge,
+.pro-card h1 {
+  text-align: left;
+}
+
+.pro-tag {
+  position: absolute;
+  top: -26px;
+  right: 18px;
+  font-size: 26px;
+  background: var(--mint);
+}
+
+.pro-list {
+  margin: 18px 0 8px;
+}
+
+.pro-note {
+  font-weight: 700;
+}
+
+.pro-continue {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
 }
 
 /* scanner */
@@ -1869,15 +1919,6 @@ button.btn:disabled:not(:active) {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .upgrade {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-  }
-
-  .upgrade-btn {
-    width: 100%;
-    white-space: normal;
-  }
 
   .dash-scan {
     padding: 28px 18px;

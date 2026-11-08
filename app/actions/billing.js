@@ -37,7 +37,7 @@ export async function startCheckout() {
       metadata: { user_id: String(user.id) },
       subscription_data: { metadata: { user_id: String(user.id) } },
       success_url: `${origin}/dashboard?upgraded=1`,
-      cancel_url: `${origin}/dashboard?canceled=1`,
+      cancel_url: `${origin}/pro?canceled=1`,
     });
     url = session.url;
   } catch (err) {

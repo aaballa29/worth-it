@@ -2,6 +2,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { appraiseItem, AppraisalError } from "@/lib/appraise";
+import { getScanAllowance, recordScan } from "@/lib/scans";
 import { getCurrentUser } from "@/lib/session";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -10,7 +11,15 @@ const MAX_BYTES = 3.75 * 1024 * 1024; // Claude's per-image limit is 5 MB of bas
 export async function appraise(_prev, formData) {
   const user = await getCurrentUser();
   if (!user) return { error: "Your session expired. Please log in again." };
-  if (!user.paid) return { error: "Scanning is a Pro feature. Upgrade to start scanning." };
+
+  const allowance = await getScanAllowance(user);
+  if (!allowance.unlimited && allowance.remaining <= 0) {
+    return {
+      limitReached: true,
+      allowance,
+      error: `You've used your ${allowance.limit} free scans for today. Go Pro for unlimited scans, or come back tomorrow.`,
+    };
+  }
 
   const photo = formData.get("photo");
   if (!photo || typeof photo === "string" || photo.size === 0) {
@@ -35,7 +44,10 @@ export async function appraise(_prev, formData) {
   try {
     const imageBase64 = Buffer.from(await photo.arrayBuffer()).toString("base64");
     const result = await appraiseItem({ imageBase64, mediaType: photo.type, paid });
-    return { result: { ...result, paid } };
+    // Only successful scans count toward the free limit.
+    await recordScan(user.id);
+    const remaining = allowance.unlimited ? null : allowance.remaining - 1;
+    return { result: { ...result, paid }, allowance: { ...allowance, remaining } };
   } catch (err) {
     console.error("[appraise] failed:", err);
 

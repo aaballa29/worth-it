@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { FREE_DAILY_SCANS, getScanAllowance } from "@/lib/scans";
 import { getCurrentUser } from "@/lib/session";
 import { logOut } from "../actions/auth";
-import { openBillingPortal, startCheckout } from "../actions/billing";
+import { openBillingPortal } from "../actions/billing";
 import ScanForm from "../components/ScanForm";
 
 export const metadata = { title: "Dashboard — worth it?" };
@@ -15,6 +16,7 @@ export default async function DashboardPage({ searchParams }) {
   const justPaid = params?.upgraded === "1";
 
   const name = user.email.split("@")[0];
+  const allowance = await getScanAllowance(user);
 
   return (
     <>
@@ -24,6 +26,9 @@ export default async function DashboardPage({ searchParams }) {
         </Link>
         <nav aria-label="Account">
           <span className="dash-email">{user.email}</span>
+          {!user.paid && (
+            <Link href="/pro" className="nav-pro">Go Pro</Link>
+          )}
           <form action={logOut}>
             <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
           </form>
@@ -57,33 +62,10 @@ export default async function DashboardPage({ searchParams }) {
         )}
 
         <div className="dash-grid">
-          <section className="dash-card dash-scan">
+          <section id="scan" className="dash-card dash-scan">
             <h2>Scan an item</h2>
-            {user.paid ? (
-              <>
-                <p>Snap a photo of something on the rack to get a Worth It or Skip It verdict.</p>
-                <ScanForm />
-              </>
-            ) : (
-              <div className="upgrade">
-                <div>
-                  <p>
-                    Scanning is part of <strong>Pro</strong>. Snap a photo of anything on the rack and get
-                    its resale value and a Worth It or Skip It verdict in seconds.
-                  </p>
-                  <form action={startCheckout}>
-                    <button type="submit" className="btn btn-primary btn-lg upgrade-btn">
-                      Upgrade to Pro: $6/mo
-                    </button>
-                  </form>
-                  <p className="upgrade-fine">Secure checkout by Stripe. Cancel anytime.</p>
-                </div>
-                <div className="pricetag upgrade-tag tilt-r" aria-hidden="true">
-                  <span className="pricetag-hole" />
-                  $6/mo
-                </div>
-              </div>
-            )}
+            <p>Snap a photo of something on the rack to see what it&rsquo;s really worth before you buy.</p>
+            <ScanForm initialAllowance={allowance} />
           </section>
 
           <section className="dash-card">
@@ -98,7 +80,13 @@ export default async function DashboardPage({ searchParams }) {
                 )}
               </>
             ) : (
-              <p>You&rsquo;re on <strong>Free</strong>. Upgrade to Pro to unlock scanning.</p>
+              <>
+                <p>
+                  You&rsquo;re on <strong>Free</strong>: {FREE_DAILY_SCANS} scans a day. Go Pro for unlimited
+                  scans.
+                </p>
+                <Link href="/pro" className="btn btn-ghost btn-sm dash-manage-link">See Pro</Link>
+              </>
             )}
           </section>
 

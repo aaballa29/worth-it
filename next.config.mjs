@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Only used by `npm run dev:local` (in-memory database for testing). Never bundled.
+  serverExternalPackages: ["@electric-sql/pglite"],
   experimental: {
     serverActions: {
       // Photos are resized in the browser before upload, but leave headroom over the 1 MB default.

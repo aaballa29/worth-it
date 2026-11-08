@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { appraise } from "../actions/appraise";
 
@@ -25,8 +26,10 @@ async function shrinkImage(file) {
 
 const money = (n) => `$${Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 
-export default function ScanForm() {
+export default function ScanForm({ initialAllowance }) {
   const [state, formAction, pending] = useActionState(appraise, {});
+  const [hideLimit, setHideLimit] = useState(false);
+  const allowance = state.allowance ?? initialAllowance;
   const [preview, setPreview] = useState(null);
   const [preparing, setPreparing] = useState(false);
   const fileRef = useRef(null);
@@ -41,6 +44,7 @@ export default function ScanForm() {
 
   async function onSubmit(e) {
     e.preventDefault();
+    setHideLimit(false);
     const formData = new FormData(e.currentTarget);
     const file = fileRef.current?.files?.[0];
     if (file) {
@@ -90,10 +94,29 @@ export default function ScanForm() {
             {preparing ? "Prepping photo…" : pending ? "Checking the comps…" : "Is it worth it?"}
           </button>
 
-          {state.error && (
-            <p className="auth-error" role="alert">
-              {state.error}
+          {allowance && !allowance.unlimited && (
+            <p className="scan-allowance">
+              {allowance.remaining} of {allowance.limit} free scans left today ·{" "}
+              <Link href="/pro">Go Pro for unlimited</Link>
             </p>
+          )}
+
+          {state.limitReached && !hideLimit ? (
+            <div className="scan-limit" role="alert">
+              <p>{state.error}</p>
+              <div className="scan-limit-actions">
+                <Link href="/pro" className="btn btn-primary btn-sm">See Pro</Link>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => setHideLimit(true)}>
+                  Continue with free
+                </button>
+              </div>
+            </div>
+          ) : (
+            state.error && !state.limitReached && (
+              <p className="auth-error" role="alert">
+                {state.error}
+              </p>
+            )
           )}
         </div>
       </form>
