@@ -5,6 +5,7 @@ const BUILDER_NAME = "Annalise Aballa";
 
 // Where the Sign up / Log in buttons go. Point these at your real auth pages when they exist.
 const SIGNUP_URL = "/signup";
+const BUY_URL = "https://buy.stripe.com/eVq28q6cFeCj4Xr2pKbZe00";
 const LOGIN_URL = "/login";
 
 const SCRIBBLE =
@@ -181,6 +182,9 @@ export default function Home() {
                 what it actually resells for, plus a <strong>Buy it</strong>, <strong>Maybe</strong>, or{" "}
                 <strong>Skip it</strong> verdict, in seconds.
               </p>
+              <a href={BUY_URL} className="btn btn-primary btn-lg btn-buy">
+                Get Worth It? – $1
+              </a>
               <div className="cta-row">
                 <Link href={SIGNUP_URL} className="btn btn-primary">Sign up free</Link>
                 <a href="#how" className="btn btn-ghost">See how it works</a>

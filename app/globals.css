@@ -409,6 +409,17 @@ button.btn:disabled {
   max-width: 34ch;
 }
 
+.btn-buy {
+  display: inline-block;
+  margin-top: 34px;
+  background: var(--mint);
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 900;
+  border-width: 4px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
 .cta-row {
   position: relative;
   display: flex;
@@ -2007,8 +2018,10 @@ button.btn:disabled:not(:active) {
     font-size: 18px;
   }
 
-  .cta-row .btn {
+  .cta-row .btn,
+  .btn-buy {
     flex: 1 1 100%;
+    width: 100%;
     text-align: center;
   }
 
