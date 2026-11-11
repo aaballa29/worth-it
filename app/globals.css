@@ -581,6 +581,29 @@ button.btn:disabled {
   gap: 40px 28px;
 }
 
+.vibe {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.vibe-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 36px 24px;
+}
+
+.vibe-grid .polaroid-caption {
+  justify-content: center;
+}
+
+.polaroid-verdict.verdict-skip_it {
+  background: var(--ink);
+  color: var(--mint);
+}
+
 .photo-credits {
   margin-top: 36px;
   text-align: center;
@@ -2346,8 +2369,14 @@ button.btn:disabled:not(:active) {
     padding-top: 80px;
   }
 
-  .finds-grid {
+  .finds-grid,
+  .vibe-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px 14px;
+  }
+
+  .vibe-grid .polaroid {
+    padding: 8px 8px 0;
   }
 
   .finds-grid .polaroid {

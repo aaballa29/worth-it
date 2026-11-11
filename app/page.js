@@ -9,29 +9,63 @@ const SIGNUP_URL = "/signup";
 const BUY_URL = "https://buy.stripe.com/eVq28q6cFeCj4Xr2pKbZe00";
 const LOGIN_URL = "/login";
 
-// Coastal photo grid. Photos are free-to-use Unsplash images (credited below the grid).
-const PHOTOS = [
-  { src: "/photos/tote-on-dock.jpg", alt: "Canvas tote bag sitting on a wooden dock", caption: "canvas tote", flip: "$3 → $28", verdict: "buy_it", tilt: "tilt-l" },
+// Homepage photos: free-to-use Unsplash images (photographers credited under "The vibe").
+// FINDS get price-flip and verdict stickers; VIBE photos are the coastal backdrop.
+const FINDS = [
+  { src: "/photos/canvas-tote-shoulder.jpg", alt: "Canvas tote bag carried over a shoulder", caption: "canvas boat tote", flip: "$4 → $38", verdict: "buy_it", tilt: "tilt-l" },
+  { src: "/photos/cream-knit.jpg", alt: "Cream knit sweater held up close", caption: "cream cable knit", flip: "$8 → $55", verdict: "buy_it", tilt: "tilt-r" },
+  { src: "/photos/linen-shirt.jpg", alt: "White linen shirt hanging on a clothesline", caption: "white linen button-down", flip: "$6 → $32", verdict: "buy_it", tilt: "tilt-l2" },
+  { src: "/photos/sweater-pile.jpg", alt: "Pile of vintage sweaters on a bed", caption: "bin of vintage knits", flip: "$3 → $25 ea", verdict: "maybe", tilt: "tilt-r" },
+  { src: "/photos/woven-bag-sea.jpg", alt: "Woven beach bag held by the sea", caption: "woven beach bag", flip: "$5 → $30", verdict: "buy_it", tilt: "tilt-l" },
+  { src: "/photos/tote-on-dock.jpg", alt: "Canvas tote bag sitting on a wooden dock", caption: "canvas tote", flip: "$3 → $28", verdict: "buy_it", tilt: "tilt-r" },
+  { src: "/photos/straw-totes.jpg", alt: "Rows of woven straw tote bags at a market", caption: "straw market totes", flip: "$10 → $14", verdict: "skip_it", tilt: "tilt-l2" },
+  { src: "/photos/striped-cushion.jpg", alt: "Navy and white striped cushion on a boat deck", caption: "striped deck cushion", flip: "$5 → $22", verdict: "maybe", tilt: "tilt-l" },
+];
+
+const VIBE = [
   { src: "/photos/wooden-sailboat.jpg", alt: "Wooden sailboat anchored in calm blue water", caption: "weekend on the water", tilt: "tilt-r" },
-  { src: "/photos/striped-cushion.jpg", alt: "Navy and white striped cushion on a boat deck", caption: "striped deck cushion", flip: "$5 → $22", verdict: "maybe", tilt: "tilt-l2" },
-  { src: "/photos/sailboat-white-dress.jpg", alt: "Woman in a white dress and sun hat on a sailboat", caption: "linen season", tilt: "tilt-r" },
+  { src: "/photos/hydrangeas.jpg", alt: "Woman leaning against a blue hydrangea bush", caption: "hydrangea season", tilt: "tilt-l" },
+  { src: "/photos/sailboat-white-dress.jpg", alt: "Woman in a white dress and sun hat on a sailboat", caption: "linen season", tilt: "tilt-l2" },
   { src: "/photos/harbor.jpg", alt: "Harbor full of moored boats", caption: "harbor-town thrift run", tilt: "tilt-r" },
   { src: "/photos/boat-rope.jpg", alt: "White rope coiled along a boat deck", caption: "nautical everything", tilt: "tilt-l" },
-  { src: "/photos/boardwalk.jpg", alt: "Wooden walkway with white railing leading to the ocean", caption: "boardwalk finds", tilt: "tilt-l2" },
-  { src: "/photos/schooners.jpg", alt: "Green and white schooners sailing at sea", caption: "coastal classics", tilt: "tilt-r" },
+  { src: "/photos/boardwalk.jpg", alt: "Wooden walkway with white railing leading to the ocean", caption: "boardwalk finds", tilt: "tilt-r" },
+  { src: "/photos/schooners.jpg", alt: "Green and white schooners sailing at sea", caption: "coastal classics", tilt: "tilt-l2" },
 ];
 
 const PHOTO_CREDITS = [
   ["Junko Nakase", "https://unsplash.com/photos/Q-72wa9-7Dg"],
+  ["Rosalie Gdy", "https://unsplash.com/photos/6SNJgorifu0"],
+  ["Valna Studio", "https://unsplash.com/photos/mU88MlEFcoU"],
+  ["tian dayong", "https://unsplash.com/photos/S4f4apZd-hA"],
+  ["Wildan Ramdani Akbar", "https://unsplash.com/photos/F891P_f_s1s"],
+  ["Duyet Le", "https://unsplash.com/photos/3KS6-RHp45E"],
   ["Katy Anne", "https://unsplash.com/photos/LX1qE-yF_Zs"],
-  ["Jim Petkiewicz", "https://unsplash.com/photos/PYq0RlkfngI"],
+  ["Kamilla Isalieva", "https://unsplash.com/photos/dDsgZgc15Qg"],
   ["Tatyana Rubleva", "https://unsplash.com/photos/WUHIGZp--Do"],
+  ["Jim Petkiewicz", "https://unsplash.com/photos/PYq0RlkfngI"],
+  ["Oleg", "https://unsplash.com/photos/QQc8JoRCaGQ"],
   ["Margo Evardson", "https://unsplash.com/photos/MAthtgXGIuY"],
   ["Josh McCausland", "https://unsplash.com/photos/1bjJZMY0hUg"],
   ["Parker Coffman", "https://unsplash.com/photos/uymNgcx2pwQ"],
   ["Artem Astashov", "https://unsplash.com/photos/KwnHylz55Xw"],
   ["Kirsten Drew", "https://unsplash.com/photos/V94BITLhU98"],
 ];
+
+// One polaroid photo, optionally with a price flip and verdict sticker.
+function Polaroid({ src, alt, caption, flip, verdict, tilt, sizes }) {
+  return (
+    <figure className={`polaroid ${tilt}`}>
+      <div className="polaroid-photo">
+        <Image src={src} alt={alt} fill sizes={sizes} />
+      </div>
+      <figcaption className="polaroid-caption">
+        <span>{caption}</span>
+        {flip && <strong>{flip}</strong>}
+      </figcaption>
+      {verdict && <span className={`polaroid-verdict verdict-${verdict}`}>{VERDICT_LABEL[verdict]}</span>}
+    </figure>
+  );
+}
 
 const VERDICT_LABEL = { buy_it: "BUY IT ✓", maybe: "MAYBE ?", skip_it: "SKIP IT ✕" };
 
@@ -264,42 +298,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* COASTAL PHOTO GRID */}
+        {/* EXAMPLE FINDS */}
         <section className="finds wrap" aria-labelledby="finds-title">
           <div className="section-head">
-            <span className="badge">The vibe</span>
+            <span className="badge">Example finds</span>
             <h2 id="finds-title">Coastal closet. Thrift-store prices.</h2>
             <p className="section-sub">
-              Stripes, totes, linen, and boat-day classics. Know which pieces are worth it before you buy.
+              Cable knits, linen, and canvas totes turn up on the rack all the time. Here&rsquo;s how
+              Worth It? sizes them up, skips included.
             </p>
           </div>
           <ul className="finds-grid">
-            {PHOTOS.map(({ src, alt, caption, flip, verdict, tilt }) => (
-              <li key={src}>
-                <figure className={`polaroid ${tilt}`}>
-                  <div className="polaroid-photo">
-                    <Image src={src} alt={alt} fill sizes="(max-width: 600px) 45vw, (max-width: 900px) 40vw, 260px" />
-                  </div>
-                  <figcaption className="polaroid-caption">
-                    <span>{caption}</span>
-                    {flip && <strong>{flip}</strong>}
-                  </figcaption>
-                  {verdict && (
-                    <span className={`polaroid-verdict verdict-${verdict}`}>{VERDICT_LABEL[verdict]}</span>
-                  )}
-                </figure>
+            {FINDS.map((f) => (
+              <li key={f.src}>
+                <Polaroid {...f} sizes="(max-width: 600px) 45vw, (max-width: 900px) 40vw, 260px" />
               </li>
             ))}
           </ul>
-          <p className="photo-credits">
-            Photos on Unsplash by{" "}
-            {PHOTO_CREDITS.map(([name, url], i) => (
-              <span key={name}>
-                <a href={url} target="_blank" rel="noopener noreferrer">{name}</a>
-                {i < PHOTO_CREDITS.length - 1 ? ", " : "."}
-              </span>
-            ))}
-          </p>
         </section>
 
         {/* HOW IT WORKS */}
@@ -531,6 +546,30 @@ export default function Home() {
               </details>
             ))}
           </div>
+        </section>
+
+        {/* THE VIBE */}
+        <section className="vibe wrap" aria-labelledby="vibe-title">
+          <div className="section-head">
+            <span className="badge">The vibe</span>
+            <h2 id="vibe-title">Made for harbor-town thrift runs.</h2>
+          </div>
+          <ul className="vibe-grid">
+            {VIBE.map((v) => (
+              <li key={v.src}>
+                <Polaroid {...v} sizes="(max-width: 600px) 45vw, 220px" />
+              </li>
+            ))}
+          </ul>
+          <p className="photo-credits">
+            Photos on Unsplash by{" "}
+            {PHOTO_CREDITS.map(([name, url], i) => (
+              <span key={name}>
+                <a href={url} target="_blank" rel="noopener noreferrer">{name}</a>
+                {i < PHOTO_CREDITS.length - 1 ? ", " : "."}
+              </span>
+            ))}
+          </p>
         </section>
 
         {/* FINAL CTA */}
