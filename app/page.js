@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CableKnit, Jeans, ShoulderBag, Sneaker, TourTee, WesternShirt } from "./components/FindArt";
 
 // Your name for the footer.
 const BUILDER_NAME = "Annalise Aballa";
@@ -7,6 +8,18 @@ const BUILDER_NAME = "Annalise Aballa";
 const SIGNUP_URL = "/signup";
 const BUY_URL = "https://buy.stripe.com/eVq28q6cFeCj4Xr2pKbZe00";
 const LOGIN_URL = "/login";
+
+// Example finds for the homepage gallery (illustrations, not real listings).
+const FINDS = [
+  { Art: WesternShirt, name: "Pearl-snap western shirt", flip: "$7 → $48", verdict: "buy_it", tilt: "tilt-l" },
+  { Art: Jeans, name: "Vintage straight-leg jeans", flip: "$9 → $55", verdict: "buy_it", tilt: "tilt-r" },
+  { Art: ShoulderBag, name: "Leather shoulder bag", flip: "$10 → $85", verdict: "buy_it", tilt: "tilt-l2" },
+  { Art: TourTee, name: "’94 tour tee", flip: "$4 → $60", verdict: "buy_it", tilt: "tilt-r" },
+  { Art: CableKnit, name: "Chunky cable knit", flip: "$12 → $30", verdict: "maybe", tilt: "tilt-l" },
+  { Art: Sneaker, name: "Retro court sneakers", flip: "$15 → $70", verdict: "buy_it", tilt: "tilt-l2" },
+];
+
+const VERDICT_LABEL = { buy_it: "BUY IT ✓", maybe: "MAYBE ?", skip_it: "SKIP IT ✕" };
 
 const SCRIBBLE =
   "M8 210 C 110 130, 170 270, 262 180 C 330 112, 300 48, 252 92 C 206 136, 320 250, 424 186 C 520 128, 556 236, 646 178 C 716 132, 700 70, 660 98 C 620 126, 690 240, 790 190 C 850 160, 880 130, 920 60";
@@ -202,10 +215,16 @@ export default function Home() {
             </div>
 
             <div className="hero-stickers" aria-hidden="true">
+              <figure className="polaroid hero-polaroid">
+                <div className="polaroid-photo">
+                  <WesternShirt />
+                </div>
+                <figcaption className="polaroid-caption">pearl-snap western</figcaption>
+              </figure>
               <div className="sticker sticker-lg tilt-l">No more<br />bad buys</div>
               <div className="pricetag tilt-r">
                 <span className="pricetag-hole" />
-                $8 → $64
+                $7 → $48
               </div>
               <div className="badge tilt-l2">AI-powered</div>
               <Star className="hero-star" />
@@ -224,6 +243,31 @@ export default function Home() {
             ))}
           </div>
         </div>
+
+        {/* EXAMPLE FINDS */}
+        <section className="finds wrap" aria-labelledby="finds-title">
+          <div className="section-head">
+            <span className="badge">Example finds</span>
+            <h2 id="finds-title">The rack is full of money.</h2>
+            <p className="section-sub">You just have to know which pieces are worth it. Here&rsquo;s the kind of stuff Worth It? helps you spot.</p>
+          </div>
+          <ul className="finds-grid">
+            {FINDS.map(({ Art, name, flip, verdict, tilt }) => (
+              <li key={name}>
+                <figure className={`polaroid ${tilt}`}>
+                  <div className="polaroid-photo">
+                    <Art />
+                  </div>
+                  <figcaption className="polaroid-caption">
+                    <span>{name}</span>
+                    <strong>{flip}</strong>
+                  </figcaption>
+                  <span className={`polaroid-verdict verdict-${verdict}`}>{VERDICT_LABEL[verdict]}</span>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         {/* HOW IT WORKS */}
         <section id="how" className="how">
