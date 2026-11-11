@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CableKnit, Jeans, ShoulderBag, Sneaker, TourTee, WesternShirt } from "./components/FindArt";
+import Image from "next/image";
 
 // Your name for the footer.
 const BUILDER_NAME = "Annalise Aballa";
@@ -9,14 +9,28 @@ const SIGNUP_URL = "/signup";
 const BUY_URL = "https://buy.stripe.com/eVq28q6cFeCj4Xr2pKbZe00";
 const LOGIN_URL = "/login";
 
-// Example finds for the homepage gallery (illustrations, not real listings).
-const FINDS = [
-  { Art: WesternShirt, name: "Pearl-snap western shirt", flip: "$7 → $48", verdict: "buy_it", tilt: "tilt-l" },
-  { Art: Jeans, name: "Vintage straight-leg jeans", flip: "$9 → $55", verdict: "buy_it", tilt: "tilt-r" },
-  { Art: ShoulderBag, name: "Leather shoulder bag", flip: "$10 → $85", verdict: "buy_it", tilt: "tilt-l2" },
-  { Art: TourTee, name: "’94 tour tee", flip: "$4 → $60", verdict: "buy_it", tilt: "tilt-r" },
-  { Art: CableKnit, name: "Chunky cable knit", flip: "$12 → $30", verdict: "maybe", tilt: "tilt-l" },
-  { Art: Sneaker, name: "Retro court sneakers", flip: "$15 → $70", verdict: "buy_it", tilt: "tilt-l2" },
+// Coastal photo grid. Photos are free-to-use Unsplash images (credited below the grid).
+const PHOTOS = [
+  { src: "/photos/tote-on-dock.jpg", alt: "Canvas tote bag sitting on a wooden dock", caption: "canvas tote", flip: "$3 → $28", verdict: "buy_it", tilt: "tilt-l" },
+  { src: "/photos/wooden-sailboat.jpg", alt: "Wooden sailboat anchored in calm blue water", caption: "weekend on the water", tilt: "tilt-r" },
+  { src: "/photos/striped-cushion.jpg", alt: "Navy and white striped cushion on a boat deck", caption: "striped deck cushion", flip: "$5 → $22", verdict: "maybe", tilt: "tilt-l2" },
+  { src: "/photos/sailboat-white-dress.jpg", alt: "Woman in a white dress and sun hat on a sailboat", caption: "linen season", tilt: "tilt-r" },
+  { src: "/photos/harbor.jpg", alt: "Harbor full of moored boats", caption: "harbor-town thrift run", tilt: "tilt-r" },
+  { src: "/photos/boat-rope.jpg", alt: "White rope coiled along a boat deck", caption: "nautical everything", tilt: "tilt-l" },
+  { src: "/photos/boardwalk.jpg", alt: "Wooden walkway with white railing leading to the ocean", caption: "boardwalk finds", tilt: "tilt-l2" },
+  { src: "/photos/schooners.jpg", alt: "Green and white schooners sailing at sea", caption: "coastal classics", tilt: "tilt-r" },
+];
+
+const PHOTO_CREDITS = [
+  ["Junko Nakase", "https://unsplash.com/photos/Q-72wa9-7Dg"],
+  ["Katy Anne", "https://unsplash.com/photos/LX1qE-yF_Zs"],
+  ["Jim Petkiewicz", "https://unsplash.com/photos/PYq0RlkfngI"],
+  ["Tatyana Rubleva", "https://unsplash.com/photos/WUHIGZp--Do"],
+  ["Margo Evardson", "https://unsplash.com/photos/MAthtgXGIuY"],
+  ["Josh McCausland", "https://unsplash.com/photos/1bjJZMY0hUg"],
+  ["Parker Coffman", "https://unsplash.com/photos/uymNgcx2pwQ"],
+  ["Artem Astashov", "https://unsplash.com/photos/KwnHylz55Xw"],
+  ["Kirsten Drew", "https://unsplash.com/photos/V94BITLhU98"],
 ];
 
 const VERDICT_LABEL = { buy_it: "BUY IT ✓", maybe: "MAYBE ?", skip_it: "SKIP IT ✕" };
@@ -217,9 +231,15 @@ export default function Home() {
             <div className="hero-stickers" aria-hidden="true">
               <figure className="polaroid hero-polaroid">
                 <div className="polaroid-photo">
-                  <WesternShirt />
+                  <Image
+                    src="/photos/striped-flatlay.jpg"
+                    alt=""
+                    fill
+                    priority
+                    sizes="(max-width: 900px) 200px, 230px"
+                  />
                 </div>
-                <figcaption className="polaroid-caption">pearl-snap western</figcaption>
+                <figcaption className="polaroid-caption">striped knit + slides</figcaption>
               </figure>
               <div className="sticker sticker-lg tilt-l">No more<br />bad buys</div>
               <div className="pricetag tilt-r">
@@ -244,29 +264,42 @@ export default function Home() {
           </div>
         </div>
 
-        {/* EXAMPLE FINDS */}
+        {/* COASTAL PHOTO GRID */}
         <section className="finds wrap" aria-labelledby="finds-title">
           <div className="section-head">
-            <span className="badge">Example finds</span>
-            <h2 id="finds-title">The rack is full of money.</h2>
-            <p className="section-sub">You just have to know which pieces are worth it. Here&rsquo;s the kind of stuff Worth It? helps you spot.</p>
+            <span className="badge">The vibe</span>
+            <h2 id="finds-title">Coastal closet. Thrift-store prices.</h2>
+            <p className="section-sub">
+              Stripes, totes, linen, and boat-day classics. Know which pieces are worth it before you buy.
+            </p>
           </div>
           <ul className="finds-grid">
-            {FINDS.map(({ Art, name, flip, verdict, tilt }) => (
-              <li key={name}>
+            {PHOTOS.map(({ src, alt, caption, flip, verdict, tilt }) => (
+              <li key={src}>
                 <figure className={`polaroid ${tilt}`}>
                   <div className="polaroid-photo">
-                    <Art />
+                    <Image src={src} alt={alt} fill sizes="(max-width: 600px) 45vw, (max-width: 900px) 40vw, 260px" />
                   </div>
                   <figcaption className="polaroid-caption">
-                    <span>{name}</span>
-                    <strong>{flip}</strong>
+                    <span>{caption}</span>
+                    {flip && <strong>{flip}</strong>}
                   </figcaption>
-                  <span className={`polaroid-verdict verdict-${verdict}`}>{VERDICT_LABEL[verdict]}</span>
+                  {verdict && (
+                    <span className={`polaroid-verdict verdict-${verdict}`}>{VERDICT_LABEL[verdict]}</span>
+                  )}
                 </figure>
               </li>
             ))}
           </ul>
+          <p className="photo-credits">
+            Photos on Unsplash by{" "}
+            {PHOTO_CREDITS.map(([name, url], i) => (
+              <span key={name}>
+                <a href={url} target="_blank" rel="noopener noreferrer">{name}</a>
+                {i < PHOTO_CREDITS.length - 1 ? ", " : "."}
+              </span>
+            ))}
+          </p>
         </section>
 
         {/* HOW IT WORKS */}

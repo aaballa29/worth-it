@@ -507,15 +507,15 @@ button.btn:disabled {
 }
 
 .polaroid-photo {
+  position: relative;
   border: 2px solid var(--ink);
   overflow: hidden;
   aspect-ratio: 1;
+  background: var(--mint);
 }
 
-.find-art {
-  display: block;
-  width: 100%;
-  height: 100%;
+.polaroid-photo img {
+  object-fit: cover;
 }
 
 .polaroid-caption {
@@ -577,8 +577,19 @@ button.btn:disabled {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 44px 36px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 28px;
+}
+
+.photo-credits {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.photo-credits a {
+  color: var(--ink);
+  text-underline-offset: 3px;
 }
 
 .finds-grid .polaroid:hover {
