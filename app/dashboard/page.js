@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { FREE_DAILY_SCANS, getScanAllowance } from "@/lib/scans";
+import { FREE_DAILY_SCANS, getScanAllowance, listScans } from "@/lib/scans";
 import { getCurrentUser } from "@/lib/session";
 import { logOut } from "../actions/auth";
 import { openBillingPortal } from "../actions/billing";
 import PhoneQr from "../components/PhoneQr";
 import ScanForm from "../components/ScanForm";
+import ScanHistoryList from "../components/ScanHistoryList";
 
 export const metadata = { title: "Dashboard — worth it?" };
 
@@ -18,6 +19,7 @@ export default async function DashboardPage({ searchParams }) {
 
   const name = user.email.split("@")[0];
   const allowance = await getScanAllowance(user);
+  const recent = await listScans(user.id, { limit: 3 });
 
   return (
     <>
@@ -27,8 +29,9 @@ export default async function DashboardPage({ searchParams }) {
         </Link>
         <nav aria-label="Account">
           <span className="dash-email">{user.email}</span>
+          <Link href="/history" className="nav-history">My scans</Link>
           {!user.paid && (
-            <Link href="/pro" className="nav-pro">Go Pro</Link>
+            <Link href="/pro" className="nav-pro nav-pro-optional">Go Pro</Link>
           )}
           <form action={logOut}>
             <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
@@ -69,6 +72,16 @@ export default async function DashboardPage({ searchParams }) {
             <ScanForm initialAllowance={allowance} />
             <PhoneQr />
           </section>
+
+          {recent.length > 0 && (
+            <section className="dash-card dash-recent">
+              <div className="dash-recent-head">
+                <h2>Recent scans</h2>
+                <Link href="/history" className="btn btn-ghost btn-sm dash-manage-link">See all &amp; search</Link>
+              </div>
+              <ScanHistoryList scans={recent} compact />
+            </section>
+          )}
 
           <section className="dash-card">
             <h2>Your plan</h2>

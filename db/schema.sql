@@ -25,6 +25,20 @@ CREATE TABLE IF NOT EXISTS scans (
   id         BIGSERIAL PRIMARY KEY,
   user_id    BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   rechecked  BOOLEAN NOT NULL DEFAULT FALSE,  -- one free re-run with brand/tag info
+  -- Scan history (shown on /history):
+  item        TEXT,
+  brand       TEXT,
+  item_type   TEXT,
+  material    TEXT,
+  condition   TEXT,
+  verdict     TEXT,               -- buy_it | maybe | skip_it
+  confidence  TEXT,               -- high | medium | low
+  resale_low  INTEGER,
+  resale_high INTEGER,
+  price_paid  NUMERIC(10, 2),
+  reason      TEXT,
+  thumb       TEXT,               -- small JPEG data URL made in the browser
+  hidden      BOOLEAN NOT NULL DEFAULT FALSE,  -- "removed" by the user; still counts toward the daily limit
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

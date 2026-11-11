@@ -24,6 +24,22 @@ async function shrinkImage(file) {
   }
 }
 
+// Small JPEG data URL for the scan history page (or "" if the browser can't decode the photo).
+async function makeThumb(file, side = 320) {
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, side / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+    return canvas.toDataURL("image/jpeg", 0.7);
+  } catch {
+    return "";
+  }
+}
+
 // First image in a list of Files (from a drop or a paste), or null.
 function firstImage(files) {
   return Array.from(files ?? []).find((f) => f.type.startsWith("image/")) ?? null;
@@ -126,8 +142,9 @@ export default function ScanForm({ initialAllowance }) {
     const file = photo;
     if (file) {
       setPreparing(true);
-      const small = await shrinkImage(file);
+      const [small, thumb] = await Promise.all([shrinkImage(file), makeThumb(file)]);
       formData.set("photo", small, small === file ? file.name : "photo.jpg");
+      formData.set("thumb", thumb);
       setPreparing(false);
       lastScan.current = { photo: formData.get("photo"), paid: String(formData.get("paid") ?? "") };
     }

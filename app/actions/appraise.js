@@ -2,7 +2,8 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { appraiseItem, AppraisalError } from "@/lib/appraise";
-import { canRecheck, getScanAllowance, markRechecked, recordScan } from "@/lib/scans";
+import { revalidatePath } from "next/cache";
+import { canRecheck, getScanAllowance, hideScan, recordScan, updateScanResult } from "@/lib/scans";
 import { getCurrentUser } from "@/lib/session";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -55,6 +56,10 @@ export async function appraise(_prev, formData) {
 
   const brandHint = String(formData.get("brand") ?? "").trim().slice(0, 80);
 
+  // Small thumbnail made in the browser, saved for the scan history page.
+  const thumbRaw = String(formData.get("thumb") ?? "");
+  const thumb = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(thumbRaw) && thumbRaw.length <= 80_000 ? thumbRaw : null;
+
   const paidRaw = String(formData.get("paid") ?? "").replace(/[$,\s]/g, "");
   let paid = null;
   if (paidRaw) {
@@ -73,11 +78,12 @@ export async function appraise(_prev, formData) {
     let scanId = recheckOf;
     let remaining = allowance.unlimited ? null : allowance.remaining;
     if (isRecheck) {
-      await markRechecked(user.id, recheckOf);
+      await updateScanResult(user.id, recheckOf, result);
     } else {
-      scanId = await recordScan(user.id);
+      scanId = await recordScan(user.id, { ...result, paid }, thumb);
       if (remaining != null) remaining -= 1;
     }
+    revalidatePath("/history");
     return {
       result: { ...result, paid, scanId, canRecheck: !isRecheck },
       allowance: { ...allowance, remaining },
@@ -105,4 +111,15 @@ export async function appraise(_prev, formData) {
     }
     return { error: "Something went wrong on our end. Please try again in a minute." };
   }
+}
+
+// Removes a scan from the user's history (it still counts toward the free daily limit).
+export async function removeScan(formData) {
+  const user = await getCurrentUser();
+  if (!user) return;
+  const scanId = String(formData.get("scanId") ?? "");
+  if (!/^\d+$/.test(scanId)) return;
+  await hideScan(user.id, scanId);
+  revalidatePath("/history");
+  revalidatePath("/dashboard");
 }
